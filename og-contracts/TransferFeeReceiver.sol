@@ -11,7 +11,7 @@ interface Depositor {
 contract TransferFeeReceiver is Ownable {
 
     // USELESS token
-    address public constant token = 0x3485D4C9E7a7717466b3276Fbf3311aD3C1bE7Af;
+    address public constant token = 0xC079d0385492Ac2D0e89ca079c186Dd71ef49B1e;
 
     // Sources To Receive Tokens
     address public furnace;

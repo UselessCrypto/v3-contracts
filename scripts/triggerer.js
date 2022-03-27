@@ -14,12 +14,12 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Useless = await hre.ethers.getContractFactory("Useless");
-  const useless = await Useless.deploy('0x03B0151dA416e7190b6D9BDEE29df53207E65c5C');
+  const Useless = await hre.ethers.getContractFactory("Triggerer");
+  const useless = await Useless.deploy();
 
   await useless.deployed();
 
-  console.log("USE v3 deployed to:", useless.address);
+  console.log("Triggerer deployed to:", useless.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

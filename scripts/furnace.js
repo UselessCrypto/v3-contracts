@@ -15,7 +15,7 @@ async function main() {
 
   // We get the contract to deploy
   const Useless = await hre.ethers.getContractFactory("Furnace");
-  const useless = await Useless.deploy("0x3485D4C9E7a7717466b3276Fbf3311aD3C1bE7Af", "0xD6C5B67a1989bA893f68C1f17fC6AC15a5C893A8", "0x2E77a36Bb7F5Da99b9224DA2165D57cF7aD3cd95");
+  const useless = await Useless.deploy("0xC079d0385492Ac2D0e89ca079c186Dd71ef49B1e", "0xDb982207A293D14e7229c15d88Ee97CAe5050F8E", "0x29999A965FBD70DCCD805efC5e6701FAd141D164");
 
   await useless.deployed();
 

@@ -1,3 +1,7 @@
+// Sources flattened with hardhat v2.8.4 https://hardhat.org
+
+// File og-contracts/Triggerer.sol
+
 //SPDX-License-Identifier: MIT
 pragma solidity 0.8.4;
 

@@ -16,6 +16,7 @@ async function main() {
   // We get the contract to deploy
   const Distributor = await hre.ethers.getContractFactory("Distributor");
   
+  //ARGS Viper Router, WONE
   const distributor = await Distributor.deploy('0xea589e93ff18b1a1f1e9bac7ef3e86ab62addc79', '0xcf664087a5bb0237a0bad6742852ec6c8d69a27a');
 
   await distributor.deployed();

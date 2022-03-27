@@ -8,7 +8,7 @@ import "./IUniswapV2Router02.sol";
 contract SellFeeReceiver is Ownable {
 
     // USELESS token
-    address public constant token = 0x3485D4C9E7a7717466b3276Fbf3311aD3C1bE7Af;
+    address public constant token = 0xC079d0385492Ac2D0e89ca079c186Dd71ef49B1e;
 
     // router
     IUniswapV2Router02 router = IUniswapV2Router02(0xf012702a5f0e54015362cBCA26a26fc90AA832a3);

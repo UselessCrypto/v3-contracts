@@ -10,38 +10,36 @@
     "local:deploy:distributor": "hardhat run --network localhost scripts/distributor.js",
     "local:deploy:swapper": "hardhat run --network localhost scripts/swapper.js",
 
+    "mainnet:harmony:flatten:distributor": "npx hardhat flatten --network harmony-mainnet og-contracts/Distributor.sol > contracts/Distributor.sol",
+    "mainnet:harmony:flatten:useless": "npx hardhat flatten --network harmony-mainnet og-contracts/Useless.sol > contracts/Useless.sol",
+    "mainnet:harmony:flatten:buyfee": "npx hardhat flatten --network harmony-mainnet og-contracts/BuyFeeReceiver.sol > contracts/BuyFeeReceiver.sol",
+    "mainnet:harmony:flatten:sellfee": "npx hardhat flatten --network harmony-mainnet og-contracts/SellFeeReceiver.sol > contracts/SellFeeReceiver.sol",
+    "mainnet:harmony:flatten:transferfee": "npx hardhat flatten --network harmony-mainnet og-contracts/TransferFeeReceiver.sol > contracts/TransferFeeReceiver.sol",
+    "mainnet:harmony:flatten:swapper": "npx hardhat flatten --network harmony-mainnet og-contracts/UselessSwapper.sol > contracts/UselessSwapper.sol",
+    "mainnet:harmony:flatten:furnacedatabase": "npx hardhat flatten --network harmony-mainnet og-contracts/FurnaceDatabase.sol > contracts/FurnaceDatabase.sol",
+    "mainnet:harmony:flatten:furnace": "npx hardhat flatten --network harmony-mainnet og-contracts/Furnace.sol > contracts/Furnace.sol",
+    "mainnet:harmony:flatten:allocator": "npx hardhat flatten --network harmony-mainnet og-contracts/Allocator.sol > contracts/Allocator.sol",
+    "mainnet:harmony:flatten:triggerer": "npx hardhat flatten --network harmony-mainnet og-contracts/Triggerer.sol > contracts/Triggerer.sol",
+
     "testnet:harmony:deploy:distributor": "hardhat run --network harmony-testnet scripts/distributor.js",
     "testnet:harmony:deploy:useless": "hardhat run --network harmony-testnet scripts/useless.js",
+    "testnet:harmony:deploy:buyfee": "hardhat run --network harmony-testnet scripts/buyfee.js",
+    "testnet:harmony:deploy:sellfee": "hardhat run --network harmony-testnet scripts/sellfee.js",
+    "testnet:harmony:deploy:transferfee": "hardhat run --network harmony-testnet scripts/transferfee.js",
     "testnet:harmony:deploy:swapper": "hardhat run --network harmony-testnet scripts/swapper.js",
+    "testnet:harmony:deploy:furnacedatabase": "hardhat run --network harmony-testnet scripts/furnacedatabase.js",
+    "testnet:harmony:deploy:furnace": "hardhat run --network harmony-testnet scripts/furnace.js",
 
-    "testnet:harmony:flatten:distributor": "npx hardhat flatten --network harmony-testnet contracts/Distributor.sol > flatten/Distributor.sol",
-
-    "local:deploy:airdrop:harmony": "",
-    "local:deploy:airdrop:bsc": "",
-   
-    
-    "testnet:harmony:verify:distributor": "npx hardhat verify --network harmony-testnet 0x2cd2664Ce5639e46c6a3125257361e01d0213657",
-    "testnet:verify:migration": "hardhat verify --network localhost <address>",
-
-    "mainnet:harmony:flatten:distributor": "npx hardhat flatten --network harmony-mainnet og-contracts/Distributor.sol > contracts/Distributor.sol",
-    "mainnet:harmony:deploy:distributor": "hardhat run --network harmony-mainnet scripts/distributor.js",
-    "mainnet:harmony:flatten:useless": "npx hardhat flatten --network harmony-mainnet og-contracts/Useless.sol > contracts/Useless.sol",
-    "mainnet:harmony:deploy:useless": "hardhat run --network harmony-mainnet scripts/useless.js",
-    "mainnet:harmony:flatten:buyfee": "npx hardhat flatten --network harmony-mainnet og-contracts/BuyFeeReceiver.sol > contracts/BuyFeeReceiver.sol",
+    "mainnet:harmony:deploy:distributor": "hardhat run --network harmony-mainnet scripts/distributor.js",    
+    "mainnet:harmony:deploy:useless": "hardhat run --network harmony-mainnet scripts/useless.js",  
     "mainnet:harmony:deploy:buyfee": "hardhat run --network harmony-mainnet scripts/buyfee.js",
-    "mainnet:harmony:flatten:sellfee": "npx hardhat flatten --network harmony-mainnet og-contracts/SellFeeReceiver.sol > contracts/SellFeeReceiver.sol",
     "mainnet:harmony:deploy:sellfee": "hardhat run --network harmony-mainnet scripts/sellfee.js",
-    "mainnet:harmony:flatten:transferfee": "npx hardhat flatten --network harmony-mainnet og-contracts/TransferFeeReceiver.sol > contracts/TransferFeeReceiver.sol",
-    "mainnet:harmony:deploy:transferfee": "hardhat run --network harmony-mainnet scripts/transferfee.js",
-    "mainnet:harmony:flatten:swapper": "npx hardhat flatten --network harmony-mainnet og-contracts/UselessSwapper.sol > contracts/UselessSwapper.sol",
-    "mainnet:harmony:deploy:swapper": "hardhat run --network harmony-mainnet scripts/swapper.js",
-    "mainnet:harmony:flatten:furnacedatabase": "npx hardhat flatten --network harmony-mainnet og-contracts/FurnaceDatabase.sol > contracts/FurnaceDatabase.sol",
-    "mainnet:harmony:deploy:furnacedatabase": "hardhat run --network harmony-mainnet scripts/furnacedatabase.js",
-    "mainnet:harmony:flatten:furnace": "npx hardhat flatten --network harmony-mainnet og-contracts/Furnace.sol > contracts/Furnace.sol",
-    "mainnet:harmony:deploy:furnace": "hardhat run --network harmony-mainnet scripts/furnace.js"
-
-
-
+    "mainnet:harmony:deploy:transferfee": "hardhat run --network harmony-mainnet scripts/transferfee.js",    
+    "mainnet:harmony:deploy:swapper": "hardhat run --network harmony-mainnet scripts/swapper.js",    
+    "mainnet:harmony:deploy:furnacedatabase": "hardhat run --network harmony-mainnet scripts/furnacedatabase.js",    
+    "mainnet:harmony:deploy:furnace": "hardhat run --network harmony-mainnet scripts/furnace.js",
+    "mainnet:harmony:deploy:allocator": "hardhat run --network harmony-mainnet scripts/allocator.js",
+    "mainnet:harmony:deploy:triggerer": "hardhat run --network harmony-mainnet scripts/triggerer.js"
   },
   "keywords": [],
   "author": "",
