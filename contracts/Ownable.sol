@@ -8,7 +8,7 @@ pragma solidity 0.8.4;
  */
 contract Ownable {
 
-    address internal owner;
+    address private owner;
     
     // event for EVM logging
     event OwnerSet(address indexed oldOwner, address indexed newOwner);

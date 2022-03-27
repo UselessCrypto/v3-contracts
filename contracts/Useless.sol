@@ -8,13 +8,15 @@ import "./SafeMath.sol";
 interface IDistributor {
     function setShare(address shareholder, uint256 amount) external;
 }
-
+/**
+    Useless V3 Contract
+    Author: DeFi Mark
+    
+    Visit https://uselesscrypto.com
+ */
 contract Useless is IERC20, Ownable {
 
     using SafeMath for uint256;
-
-    // total supply
-    uint256 private _totalSupply;
 
     // token data
     string constant _name = "Useless";
@@ -22,7 +24,7 @@ contract Useless is IERC20, Ownable {
     uint8 constant _decimals = 18;
 
     // Useless starting supply
-    uint256 _totalSupply = 10**9 * 10**_decimals;
+    uint256 _totalSupply = 10**9 * 10**18;
     
     // balances
     mapping (address => uint256) _balances;
@@ -49,7 +51,7 @@ contract Useless is IERC20, Ownable {
         bool rewardsExempt;
         bool isLiquidityPool;
     }
-    mapping ( address => Permissions ) permissions;
+    mapping ( address => Permissions ) public permissions;
 
     // ingress and egress exemption arrays for transparency
     address[] public ingressExemptContracts;
@@ -68,13 +70,13 @@ contract Useless is IERC20, Ownable {
     event SetUselessSwapper(address newUselessSwapper);
     event SetRewardsExempt(address account, bool isExempt);
     event SetEgressExemption(address account, bool isEgressExempt);
-    event SetIngressExemption(address account, bool isIngressExempt);
+    event SetIngressExemption(address account, bool isIngressFeeExempt);
     event SetAutomatedMarketMaker(address account, bool isMarketMaker);
     event SetFees(uint256 buyFee, uint256 sellFee, uint256 transferFee);
 
-    constructor(address distributor) {
+    constructor(address distributor_) {
         // dividends distributor
-        distributor = IDistributor(distributor);
+        distributor = IDistributor(distributor_);
         
         // initial supply allocation
         _balances[msg.sender] = _totalSupply;
@@ -160,6 +162,10 @@ contract Useless is IERC20, Ownable {
             // allocate fee
             _balances[feeRecipient] = _balances[feeRecipient].add(fee);
             emit Transfer(sender, feeRecipient, fee);
+            // set share if non exempt
+            if (!permissions[feeRecipient].rewardsExempt) {
+                distributor.setShare(feeRecipient, balanceOf(feeRecipient));
+            }
         }
 
         // give amount to recipient
@@ -175,6 +181,7 @@ contract Useless is IERC20, Ownable {
         }
 
         emit Transfer(sender, recipient, sendAmount);
+        return true;
     }
 
     function withdraw(address token) external onlyOwner {
@@ -189,18 +196,27 @@ contract Useless is IERC20, Ownable {
     function setBuyFeeRecipient(address recipient) external onlyOwner {
         require(recipient != address(0), 'Zero Address');
         buyFeeRecipient = recipient;
+        setRewardsExempt(recipient, true);
+        DisableEgressTaxation(recipient);
+        DisableIngressTaxation(recipient);
         emit SetBuyFeeRecipient(recipient);
     }
 
     function setTransferFeeRecipient(address recipient) external onlyOwner {
         require(recipient != address(0), 'Zero Address');
         transferFeeRecipient = recipient;
+        setRewardsExempt(recipient, true);
+        DisableEgressTaxation(recipient);
+        DisableIngressTaxation(recipient);
         emit SetTransferFeeRecipient(recipient);
     }
 
     function setSellFeeRecipient(address recipient) external onlyOwner {
         require(recipient != address(0), 'Zero Address');
         sellFeeRecipient = recipient;
+        setRewardsExempt(recipient, true);
+        DisableEgressTaxation(recipient);
+        DisableIngressTaxation(recipient);
         emit SetSellFeeRecipient(recipient);
     }
 
@@ -213,6 +229,9 @@ contract Useless is IERC20, Ownable {
     function setUselessSwapper(address newUselessSwapper) external onlyOwner {
         require(newUselessSwapper != address(0), 'Zero Address');
         UselessSwapper = newUselessSwapper;
+        setRewardsExempt(newUselessSwapper, true);
+        DisableEgressTaxation(newUselessSwapper);
+        DisableIngressTaxation(newUselessSwapper);
         emit SetUselessSwapper(newUselessSwapper);
     }
 
@@ -220,6 +239,7 @@ contract Useless is IERC20, Ownable {
         require(liquidityPool != address(0), 'Zero Address');
         require(!permissions[liquidityPool].isLiquidityPool, 'Already An AMM');
         permissions[liquidityPool].isLiquidityPool = true;
+        setRewardsExempt(liquidityPool, true);
         emit SetAutomatedMarketMaker(liquidityPool, true);
     }
 
@@ -227,6 +247,7 @@ contract Useless is IERC20, Ownable {
         require(liquidityPool != address(0), 'Zero Address');
         require(permissions[liquidityPool].isLiquidityPool, 'Not An AMM');
         permissions[liquidityPool].isLiquidityPool = false;
+        setRewardsExempt(liquidityPool, false);
         emit SetAutomatedMarketMaker(liquidityPool, false);
     }
 
@@ -251,7 +272,7 @@ contract Useless is IERC20, Ownable {
         emit SetFees(_buyFee, _sellFee, _transferFee);
     }
 
-    function setRewardsExempt(address account, bool isExempt) external onlyOwner {
+    function setRewardsExempt(address account, bool isExempt) public onlyOwner {
         require(account != address(0), 'Zero Address');
         permissions[account].rewardsExempt = isExempt;
 
@@ -263,7 +284,7 @@ contract Useless is IERC20, Ownable {
         emit SetRewardsExempt(account, isExempt);
     }
 
-    function DisableIngressTaxation(address account) external onlyOwner {
+    function DisableIngressTaxation(address account) public onlyOwner {
         require(account != address(0), 'Zero Address');
         require(!permissions[account].isIngressFeeExempt, 'Already Disabled');
 
@@ -278,7 +299,7 @@ contract Useless is IERC20, Ownable {
 
     function EnableIngressTaxation(address account) external onlyOwner {
         require(account != address(0), 'Zero Address');
-        require(permissions[account].isIngressExempt, 'Account Not Disabled');
+        require(permissions[account].isIngressFeeExempt, 'Account Not Disabled');
         require(
             ingressExemptContracts[permissions[account].ingressExemptIndex] == account,
             'Account Does Not Match Index'
@@ -295,18 +316,18 @@ contract Useless is IERC20, Ownable {
         // pop duplicate off the end of the array
         ingressExemptContracts.pop();
         // disable tax exemption
-        permissions[account].isIngressExempt = false;
+        permissions[account].isIngressFeeExempt = false;
         permissions[account].ingressExemptIndex = 0;
 
         emit SetIngressExemption(account, false);
     }
 
-    function DisableEgressTaxation(address account) external onlyOwner {
+    function DisableEgressTaxation(address account) public onlyOwner {
         require(account != address(0), 'Zero Address');
-        require(!permissions[account].isEgressExempt, 'Already Disabled');
+        require(!permissions[account].isEgressFeeExempt, 'Already Disabled');
 
         // set tax exemption
-        permissions[account].isEgressExempt = true;
+        permissions[account].isEgressFeeExempt = true;
         permissions[account].egressExemptIndex = egressExemptContracts.length;
         // add to transparency array
         egressExemptContracts.push(account);
@@ -316,7 +337,7 @@ contract Useless is IERC20, Ownable {
 
     function EnableEgressTaxation(address account) external onlyOwner {
         require(account != address(0), 'Zero Address');
-        require(permissions[account].isEgressExempt, 'Account Not Disabled');
+        require(permissions[account].isEgressFeeExempt, 'Account Not Disabled');
         require(
             egressExemptContracts[permissions[account].egressExemptIndex] == account,
             'Account Does Not Match Index'
@@ -333,7 +354,7 @@ contract Useless is IERC20, Ownable {
         // pop duplicate off the end of the array
         egressExemptContracts.pop();
         // disable tax exemption
-        permissions[account].isEgressExempt = false;
+        permissions[account].isEgressFeeExempt = false;
         permissions[account].egressExemptIndex = 0;
 
         emit SetEgressExemption(account, false);

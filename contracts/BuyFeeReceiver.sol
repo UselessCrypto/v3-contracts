@@ -47,12 +47,11 @@ contract BuyFeeReceiver is Ownable {
         emit SetStakingContract(stakingContract_);
     }
     function withdraw() external onlyOwner {
-//        (bool s,) = payable(owner).call{value: amount}("");
-        (bool s,) = payable(owner).call{value: address(this).balance}("");
+        (bool s,) = payable(msg.sender).call{value: address(this).balance}("");
         require(s);
     }
-    function withdraw(address token) external onlyOwner {
-        IERC20(token).transfer(owner, IERC20(token).balanceOf(address(this)));
+    function withdraw(address token_) external onlyOwner {
+        IERC20(token_).transfer(msg.sender, IERC20(token_).balanceOf(address(this)));
     }
     receive() external payable {}
 }
