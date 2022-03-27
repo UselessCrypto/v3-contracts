@@ -50,7 +50,6 @@ contract Ownable {
     }
 }
 
-
 interface IERC20 {
 
     function totalSupply() external view returns (uint256);
@@ -133,7 +132,7 @@ interface Depositor {
     function deposit(uint256 amount) external;
 }
 
-contract BuyFeeReceiver is Ownable {
+contract TransferFeeReceiver is Ownable {
 
     // USELESS token
     address public constant token = 0x3485D4C9E7a7717466b3276Fbf3311aD3C1bE7Af;

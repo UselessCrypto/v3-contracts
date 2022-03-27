@@ -24,7 +24,21 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.4",
+  solidity: {
+    version: "0.8.4",
+    settings: {
+      optimizer: {
+        enabled: true
+      }
+     }
+  },
+  defaultNetwork: "harmony-testnet",
+  etherscan: {
+    apiKey: {
+      bscTestnet: process.env.BSC_API_KEY !== undefined ? [process.env.BSC_API_KEY] : '',
+      bsc: process.env.BSC_API_KEY !== undefined ? [process.env.BSC_API_KEY] : '',
+    }
+  },
   networks: {
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
@@ -37,10 +51,25 @@ module.exports = {
           process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
     "harmony-mainnet": {
-      url: `https://api.harmony.one`,
+      url: `https://api.s0.t.hmny.io/`, //`https://api.harmony.one`,
       accounts:
           process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
+    "bsc-testnet": {
+      url: "https://data-seed-prebsc-1-s1.binance.org:8545",
+      chainId: 97,
+      gasPrice: 20000000000,
+      accounts:
+          process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+
+    },
+    "bsc-mainnet": {
+      url: "https://bsc-dataseed.binance.org/",
+      chainId: 56,
+      gasPrice: 20000000000,
+      accounts: 
+          process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    }
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
