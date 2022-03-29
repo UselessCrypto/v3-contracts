@@ -37,7 +37,9 @@ if (!deployerPrivateKey) {
   web3Harmony.eth.accounts.wallet.add(account);
 
   console.log(`TOTAL: ${addresses.length}`)
-    
+  
+  let TotalUselesss = BigInt(0);
+
   for (let i = 0; i < addresses.length; i += thread) {
     let users = [];
     let amounts = [];
@@ -45,18 +47,20 @@ if (!deployerPrivateKey) {
     console.log(`CHUNK: ${i}`);
     for (let j = 0; j < chunk.length; j++) {
        users[j] = chunk[j].value.address;
-       amounts[j] = chunk[j].value.useless;
+       amounts[j] = (BigInt(chunk[j].value.useless) * BigInt(1000)).toString();
+       TotalUselesss += BigInt(amounts[j])
        console.log(users[j], amounts[j]);
     }
 
-    // const result = await web3Harmony.eth.sendTransaction({
-    //   "from": account.address,
-    //   "to": addressAirdrop,
-    //   "gas": 2000000,
-    //   "data": airdrop.methods.airDrop(users, amounts).encodeABI()
-    // }).on('error', console.error);
+    const result = await web3Harmony.eth.sendTransaction({
+      "from": account.address,
+      "to": addressAirdrop,
+      "gas": 25000000,
+      "data": airdrop.methods.airDrop(users, amounts).encodeABI()
+    }).on('error', console.error);
 
-    // console.log(`Send tx: ${result.transactionHash} result: `, result.status);
+    console.log(`Send tx: ${result.transactionHash} result: `, result.status);
     
   }
+  console.log('TOTAL USE: ', TotalUselesss.toString());
 })();

@@ -6,12 +6,16 @@ const { check } = require("prettier");
 
 const bigInt = require('big-integer');
 
-const dryrun = true;
+const dryrun = false;
 
+//MAINTNET
 const rpcUrl = "http://172.18.2.152:8545";
+
+//TESTNET RPC!!!
+const rpcUrlTestnet = "https://data-seed-prebsc-1-s1.binance.org:8545";
 const address = "0x2cd2664ce5639e46c6a3125257361e01d0213657";
-const addressAirdrop = "0x43DA04C2fb4AE4E7b6Ed67a3ec9Be776F3400846";
-const thread = 150;
+const addressAirdrop = "0x3485D4C9E7a7717466b3276Fbf3311aD3C1bE7Af";
+const thread = 200;
 const oldDeployerAmount = "398106534399733599862522";
 
 
@@ -70,28 +74,32 @@ const remapToDeployer = reclaim.map((x) => x.toString().toLowerCase());
 const excludeAddresses = exclude.map((x) => x.toString().toLowerCase());
 
 const web3 = new Web3(rpcUrl);
+const web3Testnet = new Web3(rpcUrlTestnet);
 
 var BN = web3.utils.BN;
 
-
-const account = web3.eth.accounts.privateKeyToAccount(deployerPrivateKey);
-web3.eth.accounts.wallet.add(account);
+const account = web3Testnet.eth.accounts.privateKeyToAccount(deployerPrivateKey);
+web3Testnet.eth.accounts.wallet.add(account);
 
 (async () => {
   const token = new web3.eth.Contract(abi, address);
-  const airdrop = new web3.eth.Contract(abiAirdrop, addressAirdrop);
+  const airdrop = new web3Testnet.eth.Contract(abiAirdrop, addressAirdrop);
 
   let totalWei = new BN(0);
+  let totalTransactions = 0;
+  let totalAddresses = 0;
 
   for (let i = 0; i < uniqueAddress.length; i += thread) {
     let users = [];
     let amounts = [];
+    let totalChunkCount = 0;    
+    
     const chunk = uniqueAddress.slice(i, i + thread);
-    console.log(`CHUNK: ${i}`);
+    // console.log(`CHUNK: ${i}`);
     for (let j = 0; j < chunk.length; j++) {
       try {
         let balance = await token.methods.balanceOf(chunk[j]).call();
-        if (balance !== "0") {
+        if (balance !== "0" && (BigInt(balance) > BigInt(100000000000000000))) {
           //Remap
           if (remapToDeployer.includes(chunk[j].toLowerCase())) {
 
@@ -107,37 +115,45 @@ web3.eth.accounts.wallet.add(account);
           if (!excludeAddresses.includes(chunk[j].toLowerCase())) {
             users[j] = chunk[j];
             amounts[j] = balance;
-            console.log(users[j], amounts[j]);            
+            //console.log(users[j], amounts[j]);
             
             totalWei = new BN(totalWei).add(new BN(balance));
-
+            totalChunkCount++;
           }
         }
       } catch (e) {
         console.log(e);
       }
-
-
-      if (!dryrun) {
-        try {
-          // const result = await web3.eth
-          //   .sendTransaction({
-          //     from: account.address,
-          //     to: addressAirdrop,
-          //     gas: 3000000,
-          //     data: airdrop.methods.airDrop(users, amounts).encodeABI(),
-          //   })
-          //   .on("error", console.error);
-
-          console.log(
-            `Send tx: ${result.transactionHash} result: `,
-            result.status
-          );
-        } catch (e) {
-          console.log(e);
-        }
-      }
     }
+    
+    let usersFiltered = users.filter(n => n);
+    let amountsFiltered = amounts.filter(n => n);
+
+    if (!dryrun && totalChunkCount > 0) {
+      totalAddresses += usersFiltered.length;
+      totalTransactions++;
+      try {
+        // const result = await web3Testnet.eth
+        //   .sendTransaction({
+        //     from: account.address,
+        //     to: addressAirdrop,
+        //     gas: 25000000,
+        //     data: airdrop.methods.airDrop(usersFiltered, amountsFiltered).encodeABI(),
+        //   })
+        //   .on("error", console.error);
+        
+        // console.log(
+        //   `Send tx: ${result.transactionHash} result: `,
+        //   result.status
+        // );
+      } catch (e) {
+        console.log(e);
+      }
+      console.log("Total Chunk Count: ", totalChunkCount);
+    }
+    //process.exit(0);
   }  
   console.log('TOTAL: ', totalWei.toString())
+  console.log('TRANSACTIONS COUNT: ', totalTransactions.toString())
+  console.log('totalAddresses: ', totalAddresses.toString())
 })();

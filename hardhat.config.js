@@ -51,7 +51,7 @@ module.exports = {
           process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
     "harmony-mainnet": {
-      url: `https://api.s0.t.hmny.io/`, //`https://api.harmony.one`,
+      url: `https://api.s0.t.hmny.io/`,//`https://api.harmony.one`,
       accounts:
           process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
