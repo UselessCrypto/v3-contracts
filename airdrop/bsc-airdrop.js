@@ -2,6 +2,9 @@ const Web3 = require("web3");
 const abi = require("./abi.json");
 const abiAirdrop = require("./abi-airdrop.json");
 const fs = require("fs");
+const { check } = require("prettier");
+
+const bigInt = require('big-integer');
 
 const dryrun = true;
 
@@ -9,6 +12,8 @@ const rpcUrl = "http://172.18.2.152:8545";
 const address = "0x2cd2664ce5639e46c6a3125257361e01d0213657";
 const addressAirdrop = "0x43DA04C2fb4AE4E7b6Ed67a3ec9Be776F3400846";
 const thread = 150;
+const oldDeployerAmount = "398106534399733599862522";
+
 
 const deployerPrivateKey = process.env.PRIVATE_KEY || undefined;
 
@@ -19,10 +24,16 @@ if (!deployerPrivateKey) {
 
 let rawdata = fs.readFileSync("./lib/all-addresses.json");
 let addys = JSON.parse(rawdata);
-const uniqueAddress = addys.filter((x, i) => i === addys.indexOf(x));
+
+const lowerAddresses = addys.map(address => address.toLowerCase());
+const uniqueAddress = Array.from(new Set(lowerAddresses));
 
 let addresses = {};
 const deployerAddress = "0x091dD81C8B9347b30f1A4d5a88F92d6F2A42b059";
+
+const exclude = [
+  "0x000000000000000000000000000000000000dead",  
+];
 
 const reclaim = [
   "0x2d045410f002a95efcee67759a92518fa3fce677",
@@ -56,8 +67,12 @@ const reclaim = [
 ];
 
 const remapToDeployer = reclaim.map((x) => x.toString().toLowerCase());
+const excludeAddresses = exclude.map((x) => x.toString().toLowerCase());
 
 const web3 = new Web3(rpcUrl);
+
+var BN = web3.utils.BN;
+
 
 const account = web3.eth.accounts.privateKeyToAccount(deployerPrivateKey);
 web3.eth.accounts.wallet.add(account);
@@ -66,6 +81,8 @@ web3.eth.accounts.wallet.add(account);
   const token = new web3.eth.Contract(abi, address);
   const airdrop = new web3.eth.Contract(abiAirdrop, addressAirdrop);
 
+  let totalWei = new BN(0);
+
   for (let i = 0; i < uniqueAddress.length; i += thread) {
     let users = [];
     let amounts = [];
@@ -73,41 +90,54 @@ web3.eth.accounts.wallet.add(account);
     console.log(`CHUNK: ${i}`);
     for (let j = 0; j < chunk.length; j++) {
       try {
-        const balance = await token.methods.balanceOf(chunk[j]).call();
+        let balance = await token.methods.balanceOf(chunk[j]).call();
         if (balance !== "0") {
           //Remap
           if (remapToDeployer.includes(chunk[j].toLowerCase())) {
+
+            //LP POOL
+            if (chunk[j].toLowerCase() === "0x08a6cd8a2e49e3411d13f9364647e1f2ee2c6380") {
+              balance = (new BN(balance).sub(new BN(oldDeployerAmount))).toString()
+            }
+
             console.log("REMAP: ", chunk[j]);
             chunk[j] = deployerAddress;
           }
 
-          users[j] = chunk[j];
-          amounts[j] = balance;
-          console.log(users[j], amounts[j]);
+          if (!excludeAddresses.includes(chunk[j].toLowerCase())) {
+            users[j] = chunk[j];
+            amounts[j] = balance;
+            console.log(users[j], amounts[j]);            
+            
+            totalWei = new BN(totalWei).add(new BN(balance));
+
+          }
         }
       } catch (e) {
         console.log(e);
       }
 
+
       if (!dryrun) {
         try {
-        // const result = await web3.eth
-        //   .sendTransaction({
-        //     from: account.address,
-        //     to: addressAirdrop,
-        //     gas: 3000000,
-        //     data: airdrop.methods.airDrop(users, amounts).encodeABI(),
-        //   })
-        //   .on("error", console.error);
+          // const result = await web3.eth
+          //   .sendTransaction({
+          //     from: account.address,
+          //     to: addressAirdrop,
+          //     gas: 3000000,
+          //     data: airdrop.methods.airDrop(users, amounts).encodeABI(),
+          //   })
+          //   .on("error", console.error);
 
-        console.log(
-          `Send tx: ${result.transactionHash} result: `,
-          result.status
-        );
+          console.log(
+            `Send tx: ${result.transactionHash} result: `,
+            result.status
+          );
         } catch (e) {
           console.log(e);
         }
       }
     }
-  }
+  }  
+  console.log('TOTAL: ', totalWei.toString())
 })();
