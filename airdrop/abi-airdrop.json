@@ -1,0 +1,141 @@
+[
+    {
+        "stateMutability": "nonpayable",
+        "inputs": [
+            {
+                "name": "token_",
+                "internalType": "address",
+                "type": "address"
+            }
+        ],
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "type": "uint256",
+                "internalType": "uint256",
+                "name": "nUsersAirdropped"
+            }
+        ],
+        "name": "AirDroppedList",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "name": "oldOwner",
+                "indexed": true,
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "type": "address",
+                "name": "newOwner",
+                "internalType": "address",
+                "indexed": true
+            }
+        ],
+        "type": "event",
+        "name": "OwnerSet",
+        "anonymous": false
+    },
+    {
+        "name": "changeOwner",
+        "outputs": [],
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "inputs": [
+            {
+                "name": "newOwner",
+                "type": "address",
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "inputs": [],
+        "stateMutability": "view",
+        "name": "getOwner",
+        "type": "function",
+        "constant": true,
+        "signature": "0x893d20e8"
+    },
+    {
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "type": "function",
+        "inputs": [],
+        "stateMutability": "view",
+        "name": "numberAirdropped",
+        "constant": true,
+        "signature": "0xf2c1459f"
+    },
+    {
+        "inputs": [],
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "address",
+                "name": "",
+                "internalType": "address"
+            }
+        ],
+        "name": "token",
+        "constant": true,
+        "signature": "0xfc0c546a"
+    },
+    {
+        "type": "function",
+        "name": "airDrop",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "inputs": [
+            {
+                "internalType": "address[]",
+                "name": "users",
+                "type": "address[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "type": "uint256[]",
+                "name": "amounts"
+            }
+        ]
+    },
+    {
+        "name": "withdraw",
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "inputs": [
+            {
+                "name": "amount",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ]
+    },
+    {
+        "inputs": [],
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "name": "withdraw",
+        "outputs": []
+    }
+]

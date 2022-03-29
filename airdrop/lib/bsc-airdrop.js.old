@@ -1,0 +1,80 @@
+const Web3 = require("web3");
+const abi = require("./abi.json");
+const BigNumber = require("bignumber.js");
+const fs = require("fs");
+
+const rpcUrl = "http://172.18.2.152:8545";
+const address = "0x2cd2664ce5639e46c6a3125257361e01d0213657";
+const fromBlock = 8140000;
+//const toBlock = 8225000;
+const toBlock = 16457547;
+const interval = 5000;
+const parallel = 10;
+
+const web3 = new Web3(rpcUrl);
+
+(async () => {
+  let addresses = {};
+
+  try {
+    const token = new web3.eth.Contract(abi, address);
+    for (let i = fromBlock; i <= toBlock; i = i + interval * parallel) {
+      const promises = [];
+      for (let j = 1; j <= parallel; j++) {
+        console.log(i, j);
+        let startBlock = i + interval * j;
+        let endBlock = startBlock + interval;
+
+        if (endBlock > toBlock) {
+          endBlock = toBlock;
+        }
+
+        console.log(`${j}: from ${startBlock} to ${endBlock}`);
+
+        promises.push(
+          new Promise(function (resolve, reject) {
+            token
+              .getPastEvents("Transfer", {
+                fromBlock: startBlock,
+                toBlock: endBlock,
+              })
+              .then((data) => {
+                data.forEach((e) => {
+                  const { from, to, value } = e.returnValues;
+                  addresses[from] = true;
+                  addresses[to] = true;
+                });
+                resolve(true);
+              })
+              .catch((e) => {
+                console.log(e);
+                reject(true);
+              });
+          })
+        );
+      }
+
+      console.log("wait");
+      await Promise.allSettled(promises);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+  console.log(addresses);
+
+  console.log('TOTAL:', Object.keys(addresses).length)
+
+  
+
+  // Object.keys(addresses).forEach(async function (key) {
+  //   const balance = await token.methods.balanceOf(key).call();
+  //   if (balance !== "0") {
+  //     try {
+  //       fs.appendFileSync("out", JSON.stringify({ key, balance }) + "\n");
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   }
+  // });
+})();

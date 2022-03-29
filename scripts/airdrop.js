@@ -15,7 +15,7 @@ async function main() {
 
   // We get the contract to deploy
   const Migration = await hre.ethers.getContractFactory("Airdrop");
-  const migration = await Migration.deploy();
+  const migration = await Migration.deploy("0xC079d0385492Ac2D0e89ca079c186Dd71ef49B1e");
 
   await migration.deployed();
 
