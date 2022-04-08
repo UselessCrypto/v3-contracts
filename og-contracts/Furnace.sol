@@ -39,7 +39,7 @@ contract Furnace {
     uint256 constant max_ONE_in_call = 100000 * 10**18;
   
     /** Pancakeswap Router **/
-    IUniswapV2Router02 constant router = IUniswapV2Router02(0xf012702a5f0e54015362cBCA26a26fc90AA832a3);
+    IUniswapV2Router02 constant router = IUniswapV2Router02(0x32253394e1C9E33C0dA3ddD54cDEff07E457A687);
   
     /** Flash-Loan Prevention **/
     uint256 lastBlockAutomated;

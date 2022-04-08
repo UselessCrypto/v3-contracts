@@ -14,12 +14,12 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Swap = await hre.ethers.getContractFactory("Swapper");
-  const useless = await Swap.deploy('0x32253394e1C9E33C0dA3ddD54cDEff07E457A687', '0xC079d0385492Ac2D0e89ca079c186Dd71ef49B1e');
+  const Useless = await hre.ethers.getContractFactory("EclipseSwapper");
+  const useless = await Useless.deploy();
 
   await useless.deployed();
 
-  console.log("Swapper v3 deployed to:", useless.address);
+  console.log("ESdeployed to:", useless.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

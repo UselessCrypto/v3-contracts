@@ -11,7 +11,7 @@ contract SellFeeReceiver is Ownable {
     address public constant token = 0xC079d0385492Ac2D0e89ca079c186Dd71ef49B1e;
 
     // router
-    IUniswapV2Router02 router = IUniswapV2Router02(0xf012702a5f0e54015362cBCA26a26fc90AA832a3);
+    IUniswapV2Router02 router = IUniswapV2Router02(0x32253394e1C9E33C0dA3ddD54cDEff07E457A687);
 
     // recipients
     address public furnace;

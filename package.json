@@ -31,6 +31,8 @@
     "testnet:harmony:deploy:furnacedatabase": "hardhat run --network harmony-testnet scripts/furnacedatabase.js",
     "testnet:harmony:deploy:furnace": "hardhat run --network harmony-testnet scripts/furnace.js",
     "testnet:bsc:deploy:airdrop": "hardhat run --network bsc-testnet scripts/airdrop.js",
+    "mainnet:bsc:deploy:es": "hardhat run --network bsc-mainnet scripts/eclipseswapper.js",
+
 
 
     "mainnet:harmony:deploy:distributor": "hardhat run --network harmony-mainnet scripts/distributor.js",    
