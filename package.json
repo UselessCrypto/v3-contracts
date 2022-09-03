@@ -25,6 +25,8 @@
     "mainnet:harmony:flatten:eclipsegenerator": "npx hardhat flatten --network harmony-mainnet eclipse-contracts/EclipseGenerator.sol > contracts/EclipseGenerator.sol",
     "mainnet:harmony:flatten:eclipse": "npx hardhat flatten --network harmony-mainnet eclipse-contracts/Eclipse.sol > contracts/Eclipse.sol",
 
+    "mainnet:harmony:flatten:dexswapperold": "npx hardhat flatten --network harmony-mainnet old-dex-swapper-contracts/DEXSwapper.sol > contracts/DEXSwapper.sol",
+
     "testnet:harmony:deploy:distributor": "hardhat run --network harmony-testnet scripts/distributor.js",
     "testnet:harmony:deploy:useless": "hardhat run --network harmony-testnet scripts/useless.js",
     "testnet:harmony:deploy:buyfee": "hardhat run --network harmony-testnet scripts/buyfee.js",
@@ -37,6 +39,8 @@
     "mainnet:bsc:deploy:es": "hardhat run --network bsc-mainnet scripts/eclipseswapper.js",
 
 
+
+    "mainnet:harmony:deploy:dexswapperold": "hardhat run --network harmony-mainnet scripts/dexswapperold.js",
 
     "mainnet:harmony:deploy:distributor": "hardhat run --network harmony-mainnet scripts/distributor.js",    
     "mainnet:harmony:deploy:useless": "hardhat run --network harmony-mainnet scripts/useless.js",  
@@ -51,7 +55,11 @@
     "mainnet:harmony:deploy:airdrop": "hardhat run --network harmony-mainnet scripts/airdrop.js",
     "mainnet:harmony:deploy:eclipsegenerator": "hardhat run --network harmony-mainnet scripts/eclipseGenerator.js",
     "mainnet:harmony:deploy:eclipse": "hardhat run --network harmony-mainnet scripts/eclipse.js",
-    "mainnet:bsc:deploy:airdrop": "hardhat run --network bsc-mainnet scripts/airdrop.js"
+    "mainnet:bsc:deploy:airdrop": "hardhat run --network bsc-mainnet scripts/airdrop.js",
+
+
+    "mainnet:eth:deploy:eclipsegenerator": "hardhat run --network eth-mainnet scripts/eclipseGenerator.js",
+    "mainnet:eth:deploy:eclipse": "hardhat run --network eth-mainnet scripts/eclipse.js"
   },
   "keywords": [],
   "author": "",
